@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>TinyApp - <%= fullURL %></title>
+</head>
+<body>
+  <% include ./partials/_header %>
+  <%= fullURL %> - <%= shortURL %>
+  <form action="/urls/<%= shortURL %>" method="POST">
+    <label for="newURL">Enter a new URL:</label>
+    <input id="newURL" type="text" name="newURL" placeholder="http://" style="width: 300px">
+    <input type="submit" value="Submit">
+</body>
+</html>

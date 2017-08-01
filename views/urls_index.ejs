@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+</head>
+<body>
+  <% include ./partials/_header %>
+  <% for (let url in urls) { %>
+    <%if (urls.hasOwnProperty(url)) { %>
+      <form method="POST" action="/urls/<%= url %>/delete">
+        <div class="grid--2-columns">
+          <div class="grid__cell">URL: <%= urls[url] %> shortened: <%= url %></div>
+          <div class="grid__cell"><a href="/urls/<%= url %>">Edit</a></div>
+          <div class="grid__cell"><input type="submit" value="Delete"></div>
+        </div>
+      </form>
+    <% } %>
+  <% } %>
+  <p><a href="/urls/new">Create a new short URL</a></p>
+</body>
+</html>
