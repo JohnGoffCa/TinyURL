@@ -1,15 +1,17 @@
 {
   "name": "express-web-server",
   "version": "1.0.0",
-  "description": "",
+  "description": "Web app to shorten a URL",
   "main": "express-server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "repository": "JohnTheScout/TinyURL",
   "author": "",
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.17.2",
+    "cookie-parser": "^1.4.3",
     "ejs": "^2.5.7",
     "express": "^4.15.3"
   }
