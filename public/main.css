@@ -2,6 +2,9 @@
   display: inline-block;
 }
 
+#logout-form {
+  display: inline-block;
+}
 #login-username {
   display: inline-block;
   size: 20px;

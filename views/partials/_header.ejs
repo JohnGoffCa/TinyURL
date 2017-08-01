@@ -2,10 +2,16 @@
 <html lang="en">
 <head></head>
 <body>
-  <form id="login-form" action="/login" method="POST">
-    <input id="username" name="username" type="text" placeholder="User name...">
-    <input type="submit" text="Login">
-  </form>
+  <% if (!username) { %>
+    <form id="login-form" action="/login" method="POST">
+      <input id="username" name="username" type="text" placeholder="User name...">
+      <input type="submit" value="Login">
+    </form>
+  <% } else { %>
+    <form id="logout-form" action="/logout" method="POST">
+      <input type="submit" value="Logout">
+    </form>
+  <% } %>
   <div id="login-username"><%= username %></div>
 </body>
 </html>

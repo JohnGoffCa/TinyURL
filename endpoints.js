@@ -10,6 +10,16 @@ module.exports = function (app, database) {
     res.redirect(303, "/urls");
   });
   
+  app.post("/logout", (req, res) => {
+    res.clearCookie("username");
+    res.redirect(303, "/urls");
+  });
+  
+  app.post("/urls", (req, res) => {
+    let newID = random();
+    database[newID] = req.body.longURL;
+    res.redirect(303, `/urls/${newID}`);
+  });
   app.post("/urls", (req, res) => {
     let newID = random();
     database[newID] = req.body.longURL;
