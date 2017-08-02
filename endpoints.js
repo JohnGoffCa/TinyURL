@@ -3,7 +3,11 @@ const bcrypt = require("bcrypt");
 
 module.exports = function (app, database, users) {
   app.get("/", (req, res) => {
-    res.end("<html>Hello!<a href=\"/urls\">urls</a></html>");
+    if (req.session.userID) {
+      res.redirect(303, "/urls");
+    } else {
+      res.redirect(303, "/login");
+    }
   });
 
   app.get("/login", (req, res) => {
