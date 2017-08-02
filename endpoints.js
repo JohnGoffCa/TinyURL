@@ -5,19 +5,39 @@ module.exports = function (app, database, users) {
     res.end("Hello!");
   });
 
+  app.get("/login", (req, res) => {
+    let templateVars = {
+    }
+    res.render("login", templateVars);
+  });
+  
   app.post("/login", (req, res) => {
-    res.cookie("username", req.body.username);
-    res.redirect(303, "/urls");
+    let currentUser;
+
+    if (emailAlreadyExists(req.body.email), users) {
+      currentUser = getExistingUserFromEmail(req.body.email, users);
+    } else {
+      res.status(403);
+      res.send("No user with that email found!");
+    }
+
+    if (currentUser.password !== req.body.password) {
+      res.status(403);
+      res.send("Incorrect password");
+    }
+
+    res.cookie("userID", currentUser.id);
+    res.redirect(303, "/");
   });
   
   app.post("/logout", (req, res) => {
-    res.clearCookie("username");
+    res.clearCookie("userID");
     res.redirect(303, "/urls");
   });
   
   app.get("/register", (req, res) => {
     let templateVars = {
-      username: req.cookies.username,
+      user: users[req.cookies.userID],
     }
 
     res.render("registration", templateVars);
@@ -45,7 +65,7 @@ module.exports = function (app, database, users) {
   
   app.get("/urls", (req, res) => {
     let templateVars = {
-      username: req.cookies.username,
+      user: users[req.cookies.userID],
       urls: database,
     };
     res.render("urls_index", templateVars);
@@ -59,14 +79,14 @@ module.exports = function (app, database, users) {
 
   app.get("/urls/new", (req, res) => {
     let templateVars = {
-      username: req.cookies.username,
+      user: users[req.cookies.userID],
     }
     res.render("urls_new", templateVars);
   });
 
   app.get("/urls/:id", (req, res) => {
     let templateVars = {
-      username: req.cookies.username,
+      user: users[req.cookies.userID],
       shortURL: req.params.id,
       fullURL: database[req.params.id],
     };
@@ -101,6 +121,7 @@ module.exports = function (app, database, users) {
 }
 
 function emailAlreadyExists(email, users) {
+  //console.log(email, users)
   for (let id in users) {
     if (users.hasOwnProperty(id)) {
       if (users[id].email === email)
@@ -110,3 +131,11 @@ function emailAlreadyExists(email, users) {
   return false;
 }
 
+function getExistingUserFromEmail(email, users) {
+  for (let id in users) {
+    if (users.hasOwnProperty(id)) {
+      if (users[id].email === email)
+        return users[id];
+    }
+  }
+}

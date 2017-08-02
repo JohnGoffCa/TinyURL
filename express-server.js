@@ -12,12 +12,12 @@ const urlDatabase = {
 
 const users = {
   "qwerty": {
-    id: "JohnGoff",
+    id: "qwerty",
     email: "john@goff.com",
     password: "example",
   },
   "azerty": {
-    id: "exampleUser",
+    id: "azerty",
     email: "hello@world.com",
     password: "example2",
   },
