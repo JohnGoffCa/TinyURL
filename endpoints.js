@@ -81,7 +81,10 @@ module.exports = function (app, database, users) {
     let templateVars = {
       user: users[req.cookies.userID],
     }
-    res.render("urls_new", templateVars);
+    if (req.cookies.userID)
+      res.render("urls_new", templateVars);
+    else 
+      res.redirect(303, "/login");
   });
 
   app.get("/urls/:id", (req, res) => {
