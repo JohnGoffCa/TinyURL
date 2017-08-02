@@ -22,7 +22,7 @@ module.exports = function (app, database, users) {
       res.send("No user with that email found!");
     }
 
-    if (currentUser.password !== req.body.password) {
+    if (!bcrypt.compareSync(req.body.password, currentUser.password)) {
       res.status(403);
       res.send("Incorrect password");
     }
@@ -57,7 +57,7 @@ module.exports = function (app, database, users) {
     users[newID] = {
       id: newID,
       email: req.body.email,
-      password: req.body.password,
+      password: bcrypt.hashSync(req.body.password, 10),
     };
 
     res.cookie("userID", newID);

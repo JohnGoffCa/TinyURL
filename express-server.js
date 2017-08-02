@@ -1,6 +1,7 @@
 const express = require("express");
 const app = express();
 const PORT = process.env.PORT || 8080; // default port 8080
+const bcrypt = require("bcrypt");
 const path = require("path");
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
@@ -20,12 +21,12 @@ const users = {
   "qwerty": {
     id: "qwerty",
     email: "john@goff.com",
-    password: "example",
+    password: bcrypt.hashSync("example", 10),
   },
   "azerty": {
     id: "azerty",
     email: "hello@world.com",
-    password: "example2",
+    password: bcrypt.hashSync("example2", 10),
   },
 }
 
