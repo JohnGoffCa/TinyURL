@@ -6,8 +6,14 @@ const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 
 const urlDatabase = {
-  "b2xVn2": "http://www.lighthouselabs.ca",
-  "9sm5xK": "http://www.google.com",
+  "b2xVn2": {
+    url: "http://www.lighthouselabs.ca",
+    userID: "qwerty",
+  },
+  "9sm5xK": {
+    url: "http://www.google.com",
+    userID: "azerty",
+  },
 };
 
 const users = {

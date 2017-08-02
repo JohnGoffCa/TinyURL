@@ -2,7 +2,7 @@ let random = require("./random");
 
 module.exports = function (app, database, users) {
   app.get("/", (req, res) => {
-    res.end("Hello!");
+    res.end("<html>Hello!<a href=\"/urls\">urls</a></html>");
   });
 
   app.get("/login", (req, res) => {
@@ -66,14 +66,26 @@ module.exports = function (app, database, users) {
   app.get("/urls", (req, res) => {
     let templateVars = {
       user: users[req.cookies.userID],
-      urls: database,
+      urls: linksBelongingTo(req.cookies.userID, database),
     };
     res.render("urls_index", templateVars);
   });
 
   app.post("/urls", (req, res) => {
     let newID = random();
-    database[newID] = req.body.longURL;
+    let httpAppended = "";
+    if (req.cookies.userID) {
+      if (!/^https?:\/\//.test(req.body.longURL)) {
+        httpAppended = "http://" + req.body.longURL;
+      } else {
+        httpAppended = req.body.longURL;
+      }
+
+      database[newID] = {
+        url: httpAppended,
+        userID: req.cookies.userID,
+      }
+    }
     res.redirect(303, `/urls/${newID}`);
   });
 
@@ -90,14 +102,15 @@ module.exports = function (app, database, users) {
   app.get("/urls/:id", (req, res) => {
     let templateVars = {
       user: users[req.cookies.userID],
+      url: database[req.params.id],
       shortURL: req.params.id,
-      fullURL: database[req.params.id],
     };
     res.render("urls_show", templateVars);
   });
 
   app.post("/urls/:id", (req, res) => {
-    database[req.params.id] = req.body.newURL;
+    if (database[req.params.id].userID === req.cookies.userID)
+      database[req.params.id].url = req.body.newURL;
     res.redirect(303, "/urls");
   });
 
@@ -112,10 +125,11 @@ module.exports = function (app, database, users) {
 
   app.get("/u/:shortURL", (req, res) => {
     let longURL = database[req.params.shortURL];
+    console.log(database);
     if (!longURL) {
       res.status(404).send(`ERROR 404: No url ${req.params.shortURL} currently exists on server. Click <a href="/urls">here</a> to go to url page.`);
     }
-    res.redirect(301, longURL);
+    res.redirect(301, longURL.url);
   });
 
   app.get("/hello", (req, res) => {
@@ -141,4 +155,16 @@ function getExistingUserFromEmail(email, users) {
         return users[id];
     }
   }
+}
+
+function linksBelongingTo(user, database) {
+  let result = {}
+  for (let id in database) {
+    if (database.hasOwnProperty(id)) {
+      if (database[id].userID === user) {
+        result[id] = database[id];
+      }
+    }
+  }
+  return result;
 }

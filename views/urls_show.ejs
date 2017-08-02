@@ -2,14 +2,25 @@
 <html lang="en">
 <head>
   <% include partials/_head %>
-  <title>TinyApp - <%= fullURL %></title>
+  <% if (url) { %>
+    <title>TinyApp - <%= url.url %></title>
+  <% } %>
 </head>
 <body>
   <% include ./partials/_header %>
-  <%= fullURL %> - <%= shortURL %>
-  <form action="/urls/<%= shortURL %>" method="POST">
-    <label for="newURL">Enter a new URL:</label>
-    <input id="newURL" type="text" name="newURL" placeholder="http://" style="width: 300px">
-    <input type="submit" value="Submit">
+  <% if (url) { %>
+    <%= url.url %> - <%= shortURL %>
+    <% if (user && user.id === url.userID) { %>
+      <form action="/urls/<%= shortURL %>" method="POST">
+        <label for="newURL">Enter a new URL:</label>
+        <input id="newURL" type="text" name="newURL" placeholder="http://" style="width: 300px">
+        <input type="submit" value="Submit">
+      </form>
+    <% } else { %>
+      <div>This link does not belong to you!</div>
+    <% } %>
+  <% } else { %>
+    <p>That short URL doesn't seem to exist!</p>
+  <% } %>
 </body>
 </html>
