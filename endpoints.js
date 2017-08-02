@@ -1,6 +1,6 @@
 let random = require("./random");
 
-module.exports = function (app, database) {
+module.exports = function (app, database, users) {
   app.get("/", (req, res) => {
     res.end("Hello!");
   });
@@ -15,23 +15,30 @@ module.exports = function (app, database) {
     res.redirect(303, "/urls");
   });
   
-  app.post("/urls", (req, res) => {
-    let newID = random();
-    database[newID] = req.body.longURL;
-    res.redirect(303, `/urls/${newID}`);
+  app.get("/register", (req, res) => {
+    let templateVars = {
+      username: req.cookies.username,
+    }
+    res.render("registration", templateVars);
   });
-  app.post("/urls", (req, res) => {
-    let newID = random();
-    database[newID] = req.body.longURL;
-    res.redirect(303, `/urls/${newID}`);
+  
+  app.post("/register", (req, res) => {
+    res.cookie("username", req.body.username);
+    res.redirect(303, "/urls");
   });
-
+  
   app.get("/urls", (req, res) => {
     let templateVars = {
       username: req.cookies.username,
       urls: database,
     };
     res.render("urls_index", templateVars);
+  });
+
+  app.post("/urls", (req, res) => {
+    let newID = random();
+    database[newID] = req.body.longURL;
+    res.redirect(303, `/urls/${newID}`);
   });
 
   app.get("/urls/new", (req, res) => {
