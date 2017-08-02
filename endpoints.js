@@ -23,7 +23,14 @@ module.exports = function (app, database, users) {
   });
   
   app.post("/register", (req, res) => {
-    res.cookie("username", req.body.username);
+    let newID = random();
+    users[newID] = {
+      id: newID,
+      email: res.body.email,
+      password: res.body.password,
+    };
+    res.cookie("userID", newID);
+console.log(users);
     res.redirect(303, "/urls");
   });
   
