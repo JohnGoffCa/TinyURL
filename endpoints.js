@@ -19,6 +19,7 @@ module.exports = function (app, database, users) {
     let templateVars = {
       username: req.cookies.username,
     }
+
     res.render("registration", templateVars);
   });
   
@@ -26,14 +27,18 @@ module.exports = function (app, database, users) {
     if (!req.body.email || !req.body.password) {
       res.status(400);
       res.send("Error 400: no username or password provided");
-console.log("400");
+    } else if (emailAlreadyExists(req.body.email, users)) {
+      res.status(400);
+      res.send("Error 400: email already exists");
     }
+
     let newID = random();
     users[newID] = {
       id: newID,
       email: req.body.email,
       password: req.body.password,
     };
+
     res.cookie("userID", newID);
     res.redirect(303, "/urls");
   });
@@ -94,3 +99,14 @@ console.log("400");
     res.end("<html><body>Hello <b>World</b></body></html>\n");
   });
 }
+
+function emailAlreadyExists(email, users) {
+  for (let id in users) {
+    if (users.hasOwnProperty(id)) {
+      if (users[id].email === email)
+        return true;
+    }
+  }
+  return false;
+}
+
