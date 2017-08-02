@@ -1,4 +1,5 @@
-let random = require("./random");
+const random = require("./random");
+const bcrypt = require("bcrypt");
 
 module.exports = function (app, database, users) {
   app.get("/", (req, res) => {
