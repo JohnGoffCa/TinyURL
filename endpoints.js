@@ -23,14 +23,18 @@ module.exports = function (app, database, users) {
   });
   
   app.post("/register", (req, res) => {
+    if (!req.body.email || !req.body.password) {
+      res.status(400);
+      res.send("Error 400: no username or password provided");
+console.log("400");
+    }
     let newID = random();
     users[newID] = {
       id: newID,
-      email: res.body.email,
-      password: res.body.password,
+      email: req.body.email,
+      password: req.body.password,
     };
     res.cookie("userID", newID);
-console.log(users);
     res.redirect(303, "/urls");
   });
   
