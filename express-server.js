@@ -4,7 +4,7 @@ const PORT = process.env.PORT || 8080; // default port 8080
 const bcrypt = require("bcrypt");
 const path = require("path");
 const bodyParser = require("body-parser");
-const cookieParser = require("cookie-parser");
+const cookieSession = require("cookie-session");
 
 const urlDatabase = {
   "b2xVn2": {
@@ -33,7 +33,10 @@ const users = {
 app.set("view engine", "ejs");
 
 app.use(bodyParser.urlencoded({extended: true}));
-app.use(cookieParser());
+app.use(cookieSession({
+  name: 'session',
+  secret: 'johngoff',
+}));
 app.use(express.static(path.join(__dirname, "public")));
 
 require("./endpoints")(app, urlDatabase, users);

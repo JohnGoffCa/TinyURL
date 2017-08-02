@@ -27,18 +27,18 @@ module.exports = function (app, database, users) {
       res.send("Incorrect password");
     }
 
-    res.cookie("userID", currentUser.id);
+    req.session.userID = currentUser.id;
     res.redirect(303, "/");
   });
   
   app.post("/logout", (req, res) => {
-    res.clearCookie("userID");
+    req.session = null;
     res.redirect(303, "/urls");
   });
   
   app.get("/register", (req, res) => {
     let templateVars = {
-      user: users[req.cookies.userID],
+      user: users[req.session.userID],
     }
 
     res.render("registration", templateVars);
@@ -60,14 +60,14 @@ module.exports = function (app, database, users) {
       password: bcrypt.hashSync(req.body.password, 10),
     };
 
-    res.cookie("userID", newID);
+    res.session.userID = newID;
     res.redirect(303, "/urls");
   });
   
   app.get("/urls", (req, res) => {
     let templateVars = {
-      user: users[req.cookies.userID],
-      urls: linksBelongingTo(req.cookies.userID, database),
+      user: users[req.session.userID],
+      urls: linksBelongingTo(req.session.userID, database),
     };
     res.render("urls_index", templateVars);
   });
@@ -75,7 +75,7 @@ module.exports = function (app, database, users) {
   app.post("/urls", (req, res) => {
     let newID = random();
     let httpAppended = "";
-    if (req.cookies.userID) {
+    if (req.session.userID) {
       if (!/^https?:\/\//.test(req.body.longURL)) {
         httpAppended = "http://" + req.body.longURL;
       } else {
@@ -84,7 +84,7 @@ module.exports = function (app, database, users) {
 
       database[newID] = {
         url: httpAppended,
-        userID: req.cookies.userID,
+        userID: req.session.userID,
       }
     }
     res.redirect(303, `/urls/${newID}`);
@@ -92,9 +92,9 @@ module.exports = function (app, database, users) {
 
   app.get("/urls/new", (req, res) => {
     let templateVars = {
-      user: users[req.cookies.userID],
+      user: users[req.session.userID],
     }
-    if (req.cookies.userID)
+    if (req.session.userID)
       res.render("urls_new", templateVars);
     else 
       res.redirect(303, "/login");
@@ -102,7 +102,7 @@ module.exports = function (app, database, users) {
 
   app.get("/urls/:id", (req, res) => {
     let templateVars = {
-      user: users[req.cookies.userID],
+      user: users[req.session.userID],
       url: database[req.params.id],
       shortURL: req.params.id,
     };
@@ -110,7 +110,7 @@ module.exports = function (app, database, users) {
   });
 
   app.post("/urls/:id", (req, res) => {
-    if (database[req.params.id].userID === req.cookies.userID)
+    if (database[req.params.id].userID === req.session.userID)
       database[req.params.id].url = req.body.newURL;
     res.redirect(303, "/urls");
   });
