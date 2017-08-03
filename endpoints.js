@@ -96,6 +96,7 @@ module.exports = function (app, database, users) {
         url: httpAppended,
         userID: req.session.userID,
         uniqueUsers: [],
+        visitorLog: [],
       }
     }
     res.redirect(303, `/urls/${newID}`);
@@ -149,6 +150,7 @@ module.exports = function (app, database, users) {
     if (!longURL.uniqueUsers.includes(req.session.uniqueID)) {
       longURL.uniqueUsers.push(req.session.uniqueID);
     }
+    longURL.visitorLog.push(`User ${req.session.uniqueID} visited at ${Date.getHours()}:${Date.getMinutes} on ${Date.getDate()}/${Date.getMonth() + 1}/${Date.getFullYear()}`);
 
     longURL.timesVisited += 1;
     res.redirect(302, longURL.url);

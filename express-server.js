@@ -13,12 +13,14 @@ const urlDatabase = {
     userID: "qwerty",
     timesVisited: 0,
     uniqueUsers: [],
+    visitorLog: [],
   },
   "9sm5xK": {
     url: "http://www.google.com",
     userID: "azerty",
     timesVisited: 0,
     uniqueUsers: [],
+    visitorLog: [],
   },
 };
 
