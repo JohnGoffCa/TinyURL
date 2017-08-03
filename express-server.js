@@ -5,6 +5,7 @@ const bcrypt = require("bcrypt");
 const path = require("path");
 const bodyParser = require("body-parser");
 const cookieSession = require("cookie-session");
+const methodOverride = require("method-override");
 
 const urlDatabase = {
   "b2xVn2": {
@@ -33,6 +34,9 @@ const users = {
 app.set("view engine", "ejs");
 
 app.use(bodyParser.urlencoded({extended: true}));
+
+//change the HTML method with method-override if request contains _method
+app.use(methodOverride('_method'));
 
 //encrypt our cookies with cookie-session
 app.use(cookieSession({
