@@ -33,12 +33,17 @@ const users = {
 app.set("view engine", "ejs");
 
 app.use(bodyParser.urlencoded({extended: true}));
+
+//encrypt our cookies with cookie-session
 app.use(cookieSession({
   name: 'session',
   secret: 'johngoff',
 }));
+
+//set static directory to /public, allows us to serve css
 app.use(express.static(path.join(__dirname, "public")));
 
+//endpoints are all defined here, in endpoints.js
 require("./endpoints")(app, urlDatabase, users);
 
 app.listen(PORT, () => {

@@ -11,9 +11,10 @@ module.exports = function (app, database, users) {
   });
 
   app.get("/login", (req, res) => {
-    let templateVars = {
-    }
-    res.render("login", templateVars);
+    if (req.session.userID)
+      res.redirect(303, "/urls");
+
+    res.render("login");
   });
   
   app.post("/login", (req, res) => {
@@ -41,9 +42,12 @@ module.exports = function (app, database, users) {
   });
   
   app.get("/register", (req, res) => {
-    let templateVars = {
+    const templateVars = {
       user: users[req.session.userID],
     }
+
+    if (req.session.userID)
+      res.redirect(303, "/urls");
 
     res.render("registration", templateVars);
   });
@@ -57,7 +61,7 @@ module.exports = function (app, database, users) {
       res.send("Error 400: email already exists");
     }
 
-    let newID = random();
+    const newID = random();
     users[newID] = {
       id: newID,
       email: req.body.email,
@@ -69,7 +73,7 @@ module.exports = function (app, database, users) {
   });
   
   app.get("/urls", (req, res) => {
-    let templateVars = {
+    const templateVars = {
       user: users[req.session.userID],
       urls: linksBelongingTo(req.session.userID, database),
     };
@@ -77,7 +81,7 @@ module.exports = function (app, database, users) {
   });
 
   app.post("/urls", (req, res) => {
-    let newID = random();
+    const newID = random();
     let httpAppended = "";
     if (req.session.userID) {
       if (!/^https?:\/\//.test(req.body.longURL)) {
@@ -95,9 +99,10 @@ module.exports = function (app, database, users) {
   });
 
   app.get("/urls/new", (req, res) => {
-    let templateVars = {
+    const templateVars = {
       user: users[req.session.userID],
     }
+
     if (req.session.userID)
       res.render("urls_new", templateVars);
     else 
@@ -105,7 +110,7 @@ module.exports = function (app, database, users) {
   });
 
   app.get("/urls/:id", (req, res) => {
-    let templateVars = {
+    const templateVars = {
       user: users[req.session.userID],
       url: database[req.params.id],
       shortURL: req.params.id,
@@ -129,7 +134,7 @@ module.exports = function (app, database, users) {
   });
 
   app.get("/u/:shortURL", (req, res) => {
-    let longURL = database[req.params.shortURL];
+    const longURL = database[req.params.shortURL];
     console.log(database);
     if (!longURL) {
       res.status(404).send(`ERROR 404: No url ${req.params.shortURL} currently exists on server. Click <a href="/urls">here</a> to go to url page.`);
