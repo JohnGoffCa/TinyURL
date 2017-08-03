@@ -28,7 +28,7 @@ const users = {
     email: "hello@world.com",
     password: bcrypt.hashSync("example2", 10),
   },
-}
+};
 
 app.set("view engine", "ejs");
 

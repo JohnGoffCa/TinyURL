@@ -18,18 +18,20 @@ module.exports = function (app, database, users) {
   });
   
   app.post("/login", (req, res) => {
-    let currentUser;
+    let currentUser = { password: "", };
 
     if (emailAlreadyExists(req.body.email), users) {
       currentUser = getExistingUserFromEmail(req.body.email, users);
     } else {
       res.status(403);
       res.send("No user with that email found!");
+      return;
     }
 
     if (!bcrypt.compareSync(req.body.password, currentUser.password)) {
       res.status(403);
       res.send("Incorrect password");
+      return;
     }
 
     req.session.userID = currentUser.id;
