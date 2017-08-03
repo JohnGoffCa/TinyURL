@@ -10,7 +10,7 @@
   <% include ./partials/_header %>
   <% if (url) { %><!-- if url is not undefined, then we assume that the short URL is valid -->
     <% if (user && user.id === url.userID) { %><!-- if user exists, we assume user is logged in. If user.id and url.userID are the same, then the user owns the URL -->
-      <%= url.url %> - <%= shortURL %> visited <%= url.uniqueUsers.length %> times
+      <%= url.url %> - <%= shortURL %> visited <%= url.timesVisited %> times by <%= url.uniqueUsers.length %> unique users.
       <form action="/urls/<%= shortURL %>?_method=PUT" method="POST">
         <label for="newURL">Enter a new URL:</label>
         <input id="newURL" type="text" name="newURL" placeholder="http://" style="width: 300px">
