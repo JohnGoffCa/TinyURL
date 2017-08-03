@@ -11,11 +11,13 @@ const urlDatabase = {
   "b2xVn2": {
     url: "http://www.lighthouselabs.ca",
     userID: "qwerty",
+    timesVisited: 0,
     uniqueUsers: [],
   },
   "9sm5xK": {
     url: "http://www.google.com",
     userID: "azerty",
+    timesVisited: 0,
     uniqueUsers: [],
   },
 };

@@ -138,7 +138,6 @@ module.exports = function (app, database, users) {
 
   app.get("/u/:shortURL", (req, res) => {
     const longURL = database[req.params.shortURL];
-    console.log(longURL);
     if (!longURL) {
       res.status(404).send(`ERROR 404: No url ${req.params.shortURL} currently exists on server. Click <a href="/urls">here</a> to go to url page.`);
     }
@@ -147,11 +146,11 @@ module.exports = function (app, database, users) {
       req.session.uniqueID = random();
     }
 
-    console.log("UniqueID:", req.session.uniqueID);
     if (!longURL.uniqueUsers.includes(req.session.uniqueID)) {
       longURL.uniqueUsers.push(req.session.uniqueID);
     }
 
+    longURL.timesVisited += 1;
     res.redirect(302, longURL.url);
   });
 
