@@ -8,7 +8,7 @@
   <% if (user) { %><!-- check if user is logged in -->
     <% for (let url in urls) { %>
       <%if (urls.hasOwnProperty(url)) { %>
-        <form method="POST" action="/urls/<%= url %>/delete">
+        <form method="POST" action="/urls/<%= url %>/delete?_method=DELETE">
           <div class="grid--2-columns">
             <div class="grid__cell">URL: <%= urls[url].url %> shortened: <%= url %></div>
             <div class="grid__cell"><a href="/urls/<%= url %>">Edit</a></div>
