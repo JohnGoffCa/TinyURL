@@ -38,7 +38,7 @@ module.exports = function (app, database, users) {
     res.redirect(303, "/");
   });
   
-  app.post("/logout", (req, res) => {
+  app.delete("/logout", (req, res) => {
     req.session = null;
     res.redirect(303, "/urls");
   });
@@ -120,13 +120,13 @@ module.exports = function (app, database, users) {
     res.render("urls_show", templateVars);
   });
 
-  app.post("/urls/:id", (req, res) => {
+  app.put("/urls/:id", (req, res) => {
     if (database[req.params.id].userID === req.session.userID)
       database[req.params.id].url = req.body.newURL;
     res.redirect(303, "/urls");
   });
 
-  app.post("/urls/:id/delete", (req, res) => {
+  app.delete("/urls/:id/delete", (req, res) => {
     delete database[req.params.id];
     res.redirect(303, "/urls");
   });
