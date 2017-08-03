@@ -95,6 +95,7 @@ module.exports = function (app, database, users) {
       database[newID] = {
         url: httpAppended,
         userID: req.session.userID,
+        uniqueUsers: [],
       }
     }
     res.redirect(303, `/urls/${newID}`);
@@ -137,11 +138,21 @@ module.exports = function (app, database, users) {
 
   app.get("/u/:shortURL", (req, res) => {
     const longURL = database[req.params.shortURL];
-    console.log(database);
+    console.log(longURL);
     if (!longURL) {
       res.status(404).send(`ERROR 404: No url ${req.params.shortURL} currently exists on server. Click <a href="/urls">here</a> to go to url page.`);
     }
-    res.redirect(301, longURL.url);
+
+    if (!req.session.uniqueID) {
+      req.session.uniqueID = random();
+    }
+
+    console.log("UniqueID:", req.session.uniqueID);
+    if (!longURL.uniqueUsers.includes(req.session.uniqueID)) {
+      longURL.uniqueUsers.push(req.session.uniqueID);
+    }
+
+    res.redirect(302, longURL.url);
   });
 
   app.get("/hello", (req, res) => {
