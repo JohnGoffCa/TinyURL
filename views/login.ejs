@@ -4,13 +4,15 @@
     <% include partials/_head %>
   </head>
   <body>
-    <form id="login-form" action="/login" method="POST">
-      <label for="email">Email address:</label>
-      <input id="email" type="email" name="email" placeholder="name@example.com" style="width: 300px">
-      <label for="password">Password:</label>
-      <input id="password" type="password" name="password" placeholder="example" style="width: 300px">
-      <input type="submit" value="Login">
-    </form>
-    <a href="/register">Don't have an account? Go here to register</a>
+    <div class="login">
+      <form id="login-form" action="/login" method="POST">
+        <label for="email">Email address:</label>
+        <div><input id="email" type="email" name="email" placeholder="name@example.com" style="width: 300px"></div>
+        <label for="password">Password:</label>
+        <div><input id="password" type="password" name="password" placeholder="example" style="width: 300px"></div>
+        <input type="submit" value="Login">
+      </form>
+      <a class="link" href="/register">Don't have an account? Go here to register</a>
+    </div>
   </body>
 </html>

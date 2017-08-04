@@ -1,15 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
-<head></head>
-<body>
-  <% if (!user) { %>
-    <a href="/login">Login</a>
-    <a href="/register">Register</a>
-  <% } else { %>
-    <form id="logout-form" action="/logout?_method=DELETE" method="POST">
-      <input type="submit" value="Logout">
-    </form>
+<% if (!user) { %>
+  <a href="/login">Login</a>
+  <a href="/register">Register</a>
+<% } else { %>
+  <form id="logout-form" action="/logout?_method=DELETE" method="POST">
     <div id="login-username"><%= user.email %></div>
-  <% } %>
-</body>
-</html>
+    <input type="submit" value="Logout">
+  </form>
+<% } %>

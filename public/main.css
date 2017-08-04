@@ -1,11 +1,30 @@
 #login-form {
   display: inline-block;
+  text-align: left;
 }
 
 #logout-form {
   display: inline-block;
 }
+
 #login-username {
   display: inline-block;
-  size: 20px;
+}
+
+#update {
+  display: inline-block;
+  padding: 0px;
+  width: 100px;
+  margin: 0;
+}
+
+.link {
+  display: flex;
+}
+
+form {
+  display: block;
+  padding: 20px;
+  width: 400px;
+  margin: 0 auto;
 }
