@@ -18,9 +18,9 @@ module.exports = function (app, database, users) {
   });
   
   app.post("/login", (req, res) => {
-    let currentUser = { password: "", };
+    let currentUser;
 
-    if (emailAlreadyExists(req.body.email), users) {
+    if (emailAlreadyExists(req.body.email, users)) {
       currentUser = getExistingUserFromEmail(req.body.email, users);
     } else {
       res.status(403);
@@ -28,7 +28,7 @@ module.exports = function (app, database, users) {
       return;
     }
 
-    if (!bcrypt.compareSync(req.body.password, currentUser.password)) {
+    if (!currentUser && !bcrypt.compareSync(req.body.password, currentUser.password)) {
       res.status(403);
       res.send("Incorrect password");
       return;
@@ -70,7 +70,7 @@ module.exports = function (app, database, users) {
       password: bcrypt.hashSync(req.body.password, 10),
     };
 
-    res.session.userID = newID;
+    req.session.userID = newID;
     res.redirect(303, "/urls");
   });
   
@@ -79,6 +79,7 @@ module.exports = function (app, database, users) {
       user: users[req.session.userID],
       urls: linksBelongingTo(req.session.userID, database),
     };
+
     res.render("urls_index", templateVars);
   });
 
@@ -95,10 +96,12 @@ module.exports = function (app, database, users) {
       database[newID] = {
         url: httpAppended,
         userID: req.session.userID,
+        timesVisited: 0,
         uniqueUsers: [],
         visitorLog: [],
       }
     }
+
     res.redirect(303, `/urls/${newID}`);
   });
 
@@ -119,12 +122,14 @@ module.exports = function (app, database, users) {
       url: database[req.params.id],
       shortURL: req.params.id,
     };
+
     res.render("urls_show", templateVars);
   });
 
   app.put("/urls/:id", (req, res) => {
     if (database[req.params.id].userID === req.session.userID)
       database[req.params.id].url = req.body.newURL;
+
     res.redirect(303, "/urls");
   });
 
@@ -134,11 +139,12 @@ module.exports = function (app, database, users) {
   });
 
   app.get("/urls.json", (req, res) => {
-    res.json(urlDatabase);
+    res.json(database);
   });
 
   app.get("/u/:shortURL", (req, res) => {
     const longURL = database[req.params.shortURL];
+    const date = new Date();
     if (!longURL) {
       res.status(404).send(`ERROR 404: No url ${req.params.shortURL} currently exists on server. Click <a href="/urls">here</a> to go to url page.`);
     }
@@ -150,7 +156,9 @@ module.exports = function (app, database, users) {
     if (!longURL.uniqueUsers.includes(req.session.uniqueID)) {
       longURL.uniqueUsers.push(req.session.uniqueID);
     }
-    longURL.visitorLog.push(`User ${req.session.uniqueID} visited at ${Date.getHours()}:${Date.getMinutes} on ${Date.getDate()}/${Date.getMonth() + 1}/${Date.getFullYear()}`);
+    //push a string with the unique user and the current date (properly formatted) 
+    //will be printed in the ejs template
+    longURL.visitorLog.push(`User ${req.session.uniqueID} visited at ${date.getHours()}:${('0' + date.getMinutes()).slice(-2)} on ${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`);
 
     longURL.timesVisited += 1;
     res.redirect(302, longURL.url);
@@ -162,7 +170,6 @@ module.exports = function (app, database, users) {
 }
 
 function emailAlreadyExists(email, users) {
-  //console.log(email, users)
   for (let id in users) {
     if (users.hasOwnProperty(id)) {
       if (users[id].email === email)

@@ -16,6 +16,9 @@
         <input id="newURL" type="text" name="newURL" placeholder="http://" style="width: 300px">
         <input type="submit" value="Update">
       </form>
+      <% url.visitorLog.forEach((visitor) => { %>
+        <p><%= visitor %></p>
+      <% }) %>
     <% } else { %>
       <div class="errormessage">This link does not belong to you!</div>
     <% } %>
