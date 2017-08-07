@@ -46,7 +46,7 @@ module.exports = function (app, database, users) {
   app.get("/register", (req, res) => {
     const templateVars = {
       user: users[req.session.userID],
-    }
+    };
 
     if (req.session.userID)
       res.redirect(303, "/urls");
@@ -99,7 +99,7 @@ module.exports = function (app, database, users) {
         timesVisited: 0,
         uniqueUsers: [],
         visitorLog: [],
-      }
+      };
     }
 
     res.redirect(303, `/urls/${newID}`);
@@ -108,7 +108,7 @@ module.exports = function (app, database, users) {
   app.get("/urls/new", (req, res) => {
     const templateVars = {
       user: users[req.session.userID],
-    }
+    };
 
     if (req.session.userID)
       res.render("urls_new", templateVars);

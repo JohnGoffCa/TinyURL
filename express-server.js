@@ -1,11 +1,11 @@
 const express = require("express");
-const app = express();
-const PORT = process.env.PORT || 8080; // default port 8080
 const bcrypt = require("bcrypt");
 const path = require("path");
 const bodyParser = require("body-parser");
 const cookieSession = require("cookie-session");
 const methodOverride = require("method-override");
+const app = express();
+const PORT = process.env.PORT || 8080; // default port 8080
 
 const urlDatabase = {
   "b2xVn2": {
